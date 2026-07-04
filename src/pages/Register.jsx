@@ -1,39 +1,77 @@
 import { useState } from "react";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../firebase";
+import API from "../api/api";
+import { useNavigate } from "react-router-dom";
 
-export default function Register() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+function Register() {
+  const navigate = useNavigate();
 
-  const handleRegister = async (e) => {
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    password: "",
+  });
+
+  const handleChange = (e) => {
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
-      alert("Account created successfully 🎉");
-    } catch (error) {
-      alert(error.message);
+      const res = await API.post("/auth/register", form);
+
+      alert(res.data.message);
+
+      navigate("/login");
+    } catch (err) {
+      alert(err.response?.data?.message || "Registration failed");
     }
   };
 
   return (
-    <form onSubmit={handleRegister}>
+    <div>
       <h1>Register</h1>
 
-      <input
-        type="email"
-        placeholder="Enter email"
-        onChange={(e) => setEmail(e.target.value)}
-      />
+      <form onSubmit={handleSubmit}>
 
-      <input
-        type="password"
-        placeholder="Enter password"
-        onChange={(e) => setPassword(e.target.value)}
-      />
+        <input
+          type="text"
+          name="name"
+          placeholder="Enter Name"
+          onChange={handleChange}
+        />
 
-      <button type="submit">Sign Up</button>
-    </form>
+        <br /><br />
+
+        <input
+          type="email"
+          name="email"
+          placeholder="Enter Email"
+          onChange={handleChange}
+        />
+
+        <br /><br />
+
+        <input
+          type="password"
+          name="password"
+          placeholder="Enter Password"
+          onChange={handleChange}
+        />
+
+        <br /><br />
+
+        <button type="submit">
+          Register
+        </button>
+
+      </form>
+    </div>
   );
 }
+
+export default Register;
