@@ -31,6 +31,28 @@ exports.getTrips = async (req, res) => {
   }
 };
 
+// Get Single Trip
+exports.getTripById = async (req, res) => {
+  try {
+    const trip = await Trip.findOne({
+      _id: req.params.id,
+      user: req.user.id,
+    });
+
+    if (!trip) {
+      return res.status(404).json({
+        message: "Trip not found",
+      });
+    }
+
+    res.json(trip);
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
 // Update Trip
 exports.updateTrip = async (req, res) => {
   try {
@@ -43,6 +65,12 @@ exports.updateTrip = async (req, res) => {
       { new: true }
     );
 
+    if (!trip) {
+      return res.status(404).json({
+        message: "Trip not found",
+      });
+    }
+
     res.json(trip);
   } catch (error) {
     res.status(500).json({
@@ -54,10 +82,16 @@ exports.updateTrip = async (req, res) => {
 // Delete Trip
 exports.deleteTrip = async (req, res) => {
   try {
-    await Trip.findOneAndDelete({
+    const trip = await Trip.findOneAndDelete({
       _id: req.params.id,
       user: req.user.id,
     });
+
+    if (!trip) {
+      return res.status(404).json({
+        message: "Trip not found",
+      });
+    }
 
     res.json({
       message: "Trip deleted successfully",

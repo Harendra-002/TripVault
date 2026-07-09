@@ -3,16 +3,21 @@ const router = express.Router();
 
 const authMiddleware = require("../middleware/authMiddleware");
 
+
 const {
   createTrip,
   getTrips,
+  getTripById,
   updateTrip,
   deleteTrip,
 } = require("../controllers/tripController");
 
+
 router.post("/", authMiddleware, createTrip);
 
 router.get("/", authMiddleware, getTrips);
+
+router.get("/:id", authMiddleware, getTripById);
 
 router.put("/:id", authMiddleware, updateTrip);
 
