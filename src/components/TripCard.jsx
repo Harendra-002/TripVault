@@ -1,5 +1,5 @@
 import API from "../api/api";
-
+import { motion } from "framer-motion";
 function TripCard({ trip, onDelete, onEdit }) {
   const deleteTrip = async () => {
     const confirmDelete = window.confirm(
@@ -25,7 +25,11 @@ function TripCard({ trip, onDelete, onEdit }) {
   };
 
   return (
-    <div
+    <motion.div
+  initial={{ opacity: 0, y: 50 }}
+  whileInView={{ opacity: 1, y: 0 }}
+  viewport={{ once: true }}
+  transition={{ duration: 0.6 }}
       
       style={{
   backgroundColor: "#ffffff",
@@ -53,7 +57,9 @@ function TripCard({ trip, onDelete, onEdit }) {
 
       <div style={{ marginTop: "15px" }}>
         
-        <button
+        <motion.button
+  whileHover={{ scale: 1.08 }}
+  whileTap={{ scale: 0.95 }}
   style={{
     marginRight: "10px",
     backgroundColor: "#2563eb",
@@ -66,9 +72,11 @@ function TripCard({ trip, onDelete, onEdit }) {
   onClick={onEdit}
 >
   ✏️ Edit
-</button>
+</motion.button>
 
-        <button
+        <motion.button
+  whileHover={{ scale: 1.08 }}
+  whileTap={{ scale: 0.95 }}
   style={{
     backgroundColor: "#ef4444",
     color: "white",
@@ -80,9 +88,9 @@ function TripCard({ trip, onDelete, onEdit }) {
   onClick={deleteTrip}
 >
   🗑 Delete
-</button>
+</motion.button>
       </div>
-    </div>
+    </motion.div>
   );
 }
 

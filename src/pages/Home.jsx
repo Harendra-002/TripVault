@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import API from "../api/api";
 import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 import TripCard from "../components/TripCard";
 import TripForm from "../components/TripForm";
 import EditTripForm from "../components/EditTripForm";
@@ -57,7 +58,10 @@ const [editingTrip, setEditingTrip] = useState(null);
   };
 
   return (
-    <div
+    <motion.div
+  initial={{ opacity: 0, y: 40 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.8 }}
   style={{
     maxWidth: "900px",
     margin: "40px auto",
@@ -138,7 +142,7 @@ const [editingTrip, setEditingTrip] = useState(null);
       ) : (
         <p>Loading...</p>
       )}
-    </div>
+    </motion.div>
   );
 }
 
