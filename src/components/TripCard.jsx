@@ -1,14 +1,10 @@
 import API from "../api/api";
-import { motion } from "framer-motion";
+
 function TripCard({ trip, onDelete, onEdit }) {
   const deleteTrip = async () => {
-    const confirmDelete = window.confirm(
-      "Are you sure you want to delete this trip?"
-    );
-
-    if (!confirmDelete) return;
-
     const token = localStorage.getItem("token");
+
+    if (!window.confirm("Delete this trip?")) return;
 
     try {
       await API.delete(`/trips/${trip._id}`, {
@@ -17,80 +13,87 @@ function TripCard({ trip, onDelete, onEdit }) {
         },
       });
 
-      alert("Trip Deleted!");
       onDelete();
     } catch (err) {
-      alert("Delete Failed");
+      alert("Failed to delete trip");
     }
   };
 
   return (
-    <motion.div
-  initial={{ opacity: 0, y: 50 }}
-  whileInView={{ opacity: 1, y: 0 }}
-  viewport={{ once: true }}
-  transition={{ duration: 0.6 }}
-      
+    <div
       style={{
-  backgroundColor: "#ffffff",
-  borderRadius: "16px",
-  padding: "20px",
-  margin: "20px 0",
-  boxShadow: "0 6px 18px rgba(0,0,0,0.1)",
-  transition: "0.3s",
-}}
-
+        background: "#fff",
+        borderRadius: "15px",
+        overflow: "hidden",
+        boxShadow: "0 6px 18px rgba(0,0,0,0.1)",
+        marginBottom: "25px",
+      }}
     >
-      <h2 style={{ color: "#1e40af", marginBottom: "10px" }}>
-  ✈️ {trip.title}
-</h2>
+      {trip.coverImage && (
+        <img
+          src={trip.coverImage}
+          alt={trip.title}
+          style={{
+            width: "100%",
+            height: "220px",
+            objectFit: "cover",
+          }}
+        />
+      )}
 
-      <p><strong>Destination:</strong> {trip.destination}</p>
+      <div style={{ padding: "20px" }}>
+        <h2 style={{ marginBottom: "8px", color: "#2563eb" }}>
+          {trip.title}
+        </h2>
 
-      <p>
-        <strong>Dates:</strong> {trip.startDate.slice(0, 10)} - {trip.endDate.slice(0, 10)}
-      </p>
+        <p><strong>📍 Destination:</strong> {trip.destination}</p>
 
-      <p><strong>Description:</strong> {trip.description}</p>
+        <p>
+          <strong>📅 Dates:</strong>{" "}
+          {new Date(trip.startDate).toLocaleDateString()} -{" "}
+          {new Date(trip.endDate).toLocaleDateString()}
+        </p>
 
-      <p><strong>Rating:</strong> ⭐ {trip.rating}/5</p>
+        <p>
+          <strong>⭐ Rating:</strong> {trip.rating}/5
+        </p>
 
-      <div style={{ marginTop: "15px" }}>
-        
-        <motion.button
-  whileHover={{ scale: 1.08 }}
-  whileTap={{ scale: 0.95 }}
-  style={{
-    marginRight: "10px",
-    backgroundColor: "#2563eb",
-    color: "white",
-    border: "none",
-    padding: "10px 18px",
-    borderRadius: "8px",
-    cursor: "pointer",
-  }}
-  onClick={onEdit}
->
-  ✏️ Edit
-</motion.button>
+        <p style={{ marginTop: "10px" }}>
+          {trip.description}
+        </p>
 
-        <motion.button
-  whileHover={{ scale: 1.08 }}
-  whileTap={{ scale: 0.95 }}
-  style={{
-    backgroundColor: "#ef4444",
-    color: "white",
-    border: "none",
-    padding: "10px 18px",
-    borderRadius: "8px",
-    cursor: "pointer",
-  }}
-  onClick={deleteTrip}
->
-  🗑 Delete
-</motion.button>
+        <div style={{ marginTop: "20px" }}>
+          <button
+            onClick={() => onEdit(trip)}
+            style={{
+              background: "#2563eb",
+              color: "white",
+              border: "none",
+              padding: "10px 16px",
+              borderRadius: "8px",
+              cursor: "pointer",
+              marginRight: "10px",
+            }}
+          >
+            ✏ Edit
+          </button>
+
+          <button
+            onClick={deleteTrip}
+            style={{
+              background: "#ef4444",
+              color: "white",
+              border: "none",
+              padding: "10px 16px",
+              borderRadius: "8px",
+              cursor: "pointer",
+            }}
+          >
+            🗑 Delete
+          </button>
+        </div>
       </div>
-    </motion.div>
+    </div>
   );
 }
 

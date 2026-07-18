@@ -11,6 +11,8 @@ function TripForm({ onTripAdded }) {
     rating: 5,
   });
 
+const [photo, setPhoto] = useState(null);
+
   const handleChange = (e) => {
     setForm({
       ...form,
@@ -24,12 +26,34 @@ function TripForm({ onTripAdded }) {
     const token = localStorage.getItem("token");
 
     try {
-      await API.post("/trips", form, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const tripRes = await API.post("/trips", form, {
+  headers: {
+    Authorization: `Bearer ${token}`,
+  },
+});
 
+if (photo) {
+  const formData = new FormData();
+  formData.append("photo", photo);
+
+  try {
+  await API.post(
+    `/trips/${tripRes.data._id}/upload`,
+    formData,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+} catch (err) {
+  console.log("UPLOAD ERROR:", err.response?.data || err.message);
+  throw err;
+}
+
+
+
+}
       alert("Trip Added!");
 
       setForm({
@@ -42,9 +66,12 @@ function TripForm({ onTripAdded }) {
       });
 
       onTripAdded();
-    } catch (err) {
-      alert("Failed to add trip");
-    }
+   } catch (err) {
+  console.log(err.response?.data);
+  alert(err.response?.data?.message || err.message);
+}
+
+
   };
 
   return (
@@ -100,6 +127,12 @@ function TripForm({ onTripAdded }) {
         onChange={handleChange}
       />
       <br /><br />
+<input
+  type="file"
+  accept="image/*"
+  onChange={(e) => setPhoto(e.target.files[0])}
+/>
+<br /><br />
 
       <button type="submit">Add Trip</button>
     </form>
