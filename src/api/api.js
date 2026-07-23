@@ -1,7 +1,6 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "http://127.0.0.1:5000/api",
+ baseURL: "https://tripvault-backend-g7va.onrender.com/api",
 });
-
 export default API;
