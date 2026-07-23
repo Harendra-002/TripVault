@@ -12,7 +12,9 @@ function Home() {
   const [user, setUser] = useState(null);
   const [trips, setTrips] = useState([]);
   const [editingTrip, setEditingTrip] = useState(null);
-  const [search, setSearch] = useState("");
+const [search, setSearch] = useState("");
+const [sort, setSort] = useState("newest");
+ 
 
   const navigate = useNavigate();
 
@@ -58,11 +60,6 @@ function Home() {
     navigate("/login");
   };
 
-  const filteredTrips = trips.filter(
-    (trip) =>
-      trip.title.toLowerCase().includes(search.toLowerCase()) ||
-      trip.destination.toLowerCase().includes(search.toLowerCase())
-  );
 
   const avgRating =
     trips.length > 0
@@ -73,7 +70,17 @@ function Home() {
       : 0;
 
   const totalPlaces = new Set(trips.map((t) => t.destination)).size;
-
+const filteredTrips = [...trips]
+  .filter(
+    (trip) =>
+      trip.title.toLowerCase().includes(search.toLowerCase()) ||
+      trip.destination.toLowerCase().includes(search.toLowerCase())
+  )
+  .sort((a, b) => {
+    if (sort === "highest") return b.rating - a.rating;
+    if (sort === "lowest") return a.rating - b.rating;
+    return new Date(b.createdAt) - new Date(a.createdAt);
+  });
   return (
     <motion.div
       initial={{ opacity: 0, y: 40 }}
@@ -101,7 +108,58 @@ function Home() {
         <>
           <h2>Welcome, {user.name} 👋</h2>
           <p>{user.email}</p>
+<div
+  style={{
+    display: "flex",
+    gap: "20px",
+    flexWrap: "wrap",
+    margin: "20px 0",
+  }}
+>
+  <div
+    style={{
+      flex: 1,
+      background: "#2563eb",
+      color: "white",
+      padding: "20px",
+      borderRadius: "12px",
+      textAlign: "center",
+    }}
+  >
+    <h3>{trips.length}</h3>
+    <p>Total Trips</p>
+  </div>
 
+  <div
+    style={{
+      flex: 1,
+      background: "#10b981",
+      color: "white",
+      padding: "20px",
+      borderRadius: "12px",
+      textAlign: "center",
+    }}
+  >
+    <h3>{totalPlaces}</h3>
+    <p>Places Visited</p>
+  </div>
+
+  <div
+    style={{
+      flex: 1,
+      background: "#f59e0b",
+      color: "white",
+      padding: "20px",
+      borderRadius: "12px",
+      textAlign: "center",
+    }}
+  >
+    <h3>{avgRating}</h3>
+    <p>Average Rating</p>
+  </div>
+</div>
+
+<TripStats trips={trips} />
           <div style={{ marginBottom: "20px" }}>
             <button
               onClick={logout}
@@ -187,6 +245,41 @@ function Home() {
 
           <h2>My Trips</h2>
 
+<div
+  style={{
+    display: "flex",
+    gap: "10px",
+    margin: "20px 0",
+    flexWrap: "wrap",
+  }}
+>
+  <input
+    type="text"
+    placeholder="🔍 Search by title or destination..."
+    value={search}
+    onChange={(e) => setSearch(e.target.value)}
+    style={{
+      flex: 1,
+      padding: "10px",
+      border: "1px solid #ccc",
+      borderRadius: "8px",
+    }}
+  />
+
+  <select
+    value={sort}
+    onChange={(e) => setSort(e.target.value)}
+    style={{
+      padding: "10px",
+      borderRadius: "8px",
+      border: "1px solid #ccc",
+    }}
+  >
+    <option value="newest">Newest</option>
+    <option value="highest">Highest Rating</option>
+    <option value="lowest">Lowest Rating</option>
+  </select>
+</div>
           {filteredTrips.length === 0 ? (
             <h3 style={{ textAlign: "center" }}>
               ✈️ No Trips Found

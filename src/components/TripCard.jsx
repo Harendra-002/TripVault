@@ -23,10 +23,11 @@ function TripCard({ trip, onDelete, onEdit }) {
     <div
       style={{
         background: "#fff",
-        borderRadius: "15px",
+        borderRadius: "18px",
         overflow: "hidden",
-        boxShadow: "0 6px 18px rgba(0,0,0,0.1)",
-        marginBottom: "25px",
+        boxShadow: "0 8px 25px rgba(0,0,0,0.12)",
+        marginBottom: "30px",
+        transition: "0.3s",
       }}
     >
       {trip.coverImage && (
@@ -35,44 +36,73 @@ function TripCard({ trip, onDelete, onEdit }) {
           alt={trip.title}
           style={{
             width: "100%",
-            height: "220px",
+            height: "260px",
             objectFit: "cover",
           }}
         />
       )}
 
-      <div style={{ padding: "20px" }}>
-        <h2 style={{ marginBottom: "8px", color: "#2563eb" }}>
-          {trip.title}
+      <div style={{ padding: "22px" }}>
+        <h2
+          style={{
+            color: "#2563eb",
+            marginBottom: "10px",
+          }}
+        >
+          ✈ {trip.title}
         </h2>
 
-        <p><strong>📍 Destination:</strong> {trip.destination}</p>
+        <p style={{ marginBottom: "8px" }}>
+          📍 <strong>{trip.destination}</strong>
+        </p>
 
-        <p>
-          <strong>📅 Dates:</strong>{" "}
-          {new Date(trip.startDate).toLocaleDateString()} -{" "}
+        <p style={{ marginBottom: "8px" }}>
+          📅 {new Date(trip.startDate).toLocaleDateString()} —{" "}
           {new Date(trip.endDate).toLocaleDateString()}
         </p>
 
-        <p>
-          <strong>⭐ Rating:</strong> {trip.rating}/5
-        </p>
+        <div
+          style={{
+            display: "inline-block",
+            background: "#fef3c7",
+            color: "#92400e",
+            padding: "6px 12px",
+            borderRadius: "30px",
+            fontWeight: "bold",
+            marginBottom: "15px",
+          }}
+        >
+          ⭐ {trip.rating}/5
+        </div>
 
-        <p style={{ marginTop: "10px" }}>
+        <p
+          style={{
+            color: "#555",
+            lineHeight: "1.7",
+            marginBottom: "20px",
+          }}
+        >
           {trip.description}
         </p>
 
-        <div style={{ marginTop: "20px" }}>
+        <div
+          style={{
+            display: "flex",
+            gap: "12px",
+            flexWrap: "wrap",
+          }}
+        >
           <button
             onClick={() => onEdit(trip)}
             style={{
+              flex: 1,
               background: "#2563eb",
               color: "white",
               border: "none",
-              padding: "10px 16px",
-              borderRadius: "8px",
+              padding: "12px",
+              borderRadius: "10px",
               cursor: "pointer",
-              marginRight: "10px",
+              fontWeight: "bold",
             }}
           >
             ✏ Edit
@@ -81,12 +111,14 @@ function TripCard({ trip, onDelete, onEdit }) {
           <button
             onClick={deleteTrip}
             style={{
+              flex: 1,
               background: "#ef4444",
               color: "white",
               border: "none",
-              padding: "10px 16px",
-              borderRadius: "8px",
+              padding: "12px",
+              borderRadius: "10px",
               cursor: "pointer",
+              fontWeight: "bold",
             }}
           >
             🗑 Delete
@@ -98,3 +130,4 @@ function TripCard({ trip, onDelete, onEdit }) {
 }
 
 export default TripCard;
+       
